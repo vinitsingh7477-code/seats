@@ -1,0 +1,14 @@
+node_modules/
+dist/
+*.tsbuildinfo
+.env*
+secrets/
+.secrets/
+credentials/
+.npmrc
+*.pem
+*.key
+*.p12
+*.pfx
+credentials*.json
+service-account*.json

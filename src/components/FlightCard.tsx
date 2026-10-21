@@ -1,12 +1,28 @@
-import { ArrowRight, Clock3, Plane } from 'lucide-react';
+import { ArrowUpRight, Clock3, PlaneTakeoff } from 'lucide-react';
 import type { DemoFlight } from '../types/flight';
 
 interface FlightCardProps { flight: DemoFlight; dateLabel: string; }
+
 export default function FlightCard({ flight, dateLabel }: FlightCardProps) {
-  return <article className="flight-card">
-    <div className="flight-main"><div className="flight-brand-icon"><Plane size={18} /></div><div className="airline"><strong>{flight.airline}</strong><span>{flight.flightNumber} <i>·</i> {flight.cabin}</span></div><span className="demo-pill">DEMO INVENTORY</span></div>
-    <div className="flight-route"><div className="airport-time"><strong>{flight.departure}</strong><span>IDR</span></div><div className="route-line"><span>{flight.duration}</span><div><i /><b /><i /></div><span>Non-stop</span></div><div className="airport-time"><strong>{flight.arrival}</strong><span>DEL</span></div></div>
-    <div className="flight-meta"><span><Clock3 size={14} /> {dateLabel}</span><span>{flight.seats} indicative seats</span><span>Airline authorisation required</span></div>
-    <div className="flight-price"><div><span>Indicative fare</span><strong>₹{flight.fare.toLocaleString('en-IN')}<small> / seat</small></strong></div><button className="select-button" type="button" aria-label={`View demo details for ${flight.flightNumber}`} onClick={() => document.querySelector('#eligibility')?.scrollIntoView({ behavior: 'smooth' })}><ArrowRight size={18} /></button></div>
+  const headingId = `schedule-${flight.id}`;
+
+  return <article className="flight-card" aria-labelledby={headingId}>
+    <div className="flight-card-top">
+      <span className="flight-airline-mark" aria-hidden="true"><PlaneTakeoff size={19} /></span>
+      <div className="airline"><strong id={headingId}>{flight.label}</strong><span>Indore to Delhi · example schedule</span></div>
+      <span className="demo-pill">DEMO</span>
+    </div>
+
+    <div className="flight-route">
+      <div className="airport-time"><strong>{flight.departure}</strong><span>IDR · Indore</span></div>
+      <div className="route-line"><span>{flight.duration}</span><div aria-hidden="true"><i /><b /><i /></div><span>Sample journey time</span></div>
+      <div className="airport-time airport-arrival"><strong>{flight.arrival}</strong><span>DEL · Delhi</span></div>
+    </div>
+
+    <div className="flight-meta"><span><Clock3 size={16} /> {dateLabel}</span><span>Availability not connected</span></div>
+    <div className="flight-card-bottom">
+      <p>Times are illustrative. No airline schedule, availability or fare service is connected.</p>
+      <a className="flight-rule-link" href="#standby-rules">Standby conditions <ArrowUpRight size={15} /></a>
+    </div>
   </article>;
 }

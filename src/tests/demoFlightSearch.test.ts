@@ -2,8 +2,9 @@ import { describe, expect, it } from 'vitest';
 import { searchDemoFlights } from '../services/demoFlightSearch';
 
 describe('local schedule search', () => {
-  const today = new Date(2026, 9, 22, 12);
-  const todayIso = '2026-10-22';
+  const today = new Date();
+  today.setHours(12, 0, 0, 0);
+  const todayIso = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
 
   it('applies exact and flexible date windows only to local demo schedules', () => {
     expect(searchDemoFlights({ travelDate: todayIso, flexibility: 'exact' }, 'departure', today).map((flight) => flight.id))

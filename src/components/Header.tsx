@@ -3,10 +3,12 @@ import { ArrowUpRight, Menu, X } from 'lucide-react';
 import Brand from './Brand';
 
 const navigation = [
-  { href: '#flights', label: 'Explore schedules' },
-  { href: '#how-it-works', label: 'How standby works' },
+  { href: '/search', label: 'Explore' },
+  { href: '/how-it-works', label: 'How it works' },
+  { href: '/plans', label: 'Plans' },
+  { href: '/faq', label: 'FAQ' },
   { href: '#/dashboard', label: 'My account' },
-  { href: '#/admin', label: 'Operations' },
+  { href: '/login', label: 'Sign in' },
 ];
 
 export default function Header() {
@@ -30,20 +32,25 @@ export default function Header() {
     menuButtonRef.current?.focus();
   }
 
+  function isCurrent(href: string) {
+    const pathname = window.location.pathname.replace(/\/$/, '') || '/';
+    return href.startsWith('#/') ? window.location.hash === href : pathname === href;
+  }
+
   return <header className="site-header">
     <div className="container nav-wrap">
       <Brand />
       <nav aria-label="Main navigation" className="desktop-nav">
-        {navigation.map((item) => <a key={item.href} href={item.href}>{item.label}</a>)}
+        {navigation.map((item) => <a key={item.href} href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>{item.label}</a>)}
       </nav>
-      <a className="nav-cta" href="#search">Explore the demo <ArrowUpRight size={16} /></a>
+      <a className="nav-cta" href="/search">Explore routes <ArrowUpRight size={16} /></a>
       <button ref={menuButtonRef} className="mobile-menu" aria-label={menuOpen ? 'Close navigation menu' : 'Open navigation menu'} aria-expanded={menuOpen} aria-controls="mobile-navigation" onClick={() => setMenuOpen((open) => !open)}>
         {menuOpen ? <X size={21} /> : <Menu size={21} />}
       </button>
     </div>
     <nav id="mobile-navigation" className={`mobile-navigation${menuOpen ? ' is-open' : ''}`} aria-label="Mobile navigation" aria-hidden={!menuOpen}>
-      {navigation.map((item) => <a key={item.href} href={item.href} tabIndex={menuOpen ? 0 : -1} onClick={closeMenu}>{item.label}</a>)}
-      <a className="mobile-cta" href="#search" tabIndex={menuOpen ? 0 : -1} onClick={closeMenu}>Explore the demo <ArrowUpRight size={16} /></a>
+      {navigation.map((item) => <a key={item.href} href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined} tabIndex={menuOpen ? 0 : -1} onClick={closeMenu}>{item.label}</a>)}
+      <a className="mobile-cta" href="/search" tabIndex={menuOpen ? 0 : -1} onClick={closeMenu}>Explore routes <ArrowUpRight size={16} /></a>
     </nav>
   </header>;
 }

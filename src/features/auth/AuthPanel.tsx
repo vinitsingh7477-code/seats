@@ -1,16 +1,17 @@
 import { useState, type FormEvent } from 'react';
-import { ArrowRight, LockKeyhole, RotateCw } from 'lucide-react';
+import { ArrowRight, Eye, EyeOff, LockKeyhole, RotateCw } from 'lucide-react';
 import { useAuth } from './authContext';
 
 type AuthMode = 'sign-in' | 'sign-up';
 
-export default function AuthPanel() {
+export default function AuthPanel({ initialMode = 'sign-in' }: { initialMode?: AuthMode }) {
   const auth = useAuth();
-  const [mode, setMode] = useState<AuthMode>('sign-in');
+  const [mode, setMode] = useState<AuthMode>(initialMode);
   const [displayName, setDisplayName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirmation, setPasswordConfirmation] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -40,7 +41,7 @@ export default function AuthPanel() {
             <form className="auth-form" onSubmit={(event) => void submit(event)}>
               {mode === 'sign-up' && <label>Display name<input autoComplete="name" value={displayName} onChange={(event) => setDisplayName(event.target.value)} required maxLength={100} /></label>}
               <label>Email address<input type="email" autoComplete="email" value={email} onChange={(event) => setEmail(event.target.value)} required maxLength={254} /></label>
-              <label>Password<input type="password" autoComplete={mode === 'sign-up' ? 'new-password' : 'current-password'} value={password} onChange={(event) => setPassword(event.target.value)} required minLength={8} maxLength={128} /></label>
+              <label>Password<input type={showPassword ? 'text' : 'password'} autoComplete={mode === 'sign-up' ? 'new-password' : 'current-password'} value={password} onChange={(event) => setPassword(event.target.value)} required minLength={8} maxLength={128} /><button className="password-toggle" type="button" aria-label={showPassword ? 'Hide password' : 'Show password'} onClick={() => setShowPassword((visible) => !visible)}>{showPassword ? <EyeOff size={16} /> : <Eye size={16} />}</button></label>
               {mode === 'sign-up' && <label>Confirm password<input type="password" autoComplete="new-password" value={passwordConfirmation} onChange={(event) => setPasswordConfirmation(event.target.value)} required maxLength={128} /></label>}
               <button className="auth-submit" type="submit" disabled={auth.submitting}>
                 {auth.submitting ? 'Please wait…' : mode === 'sign-up' ? 'Create your account' : 'Sign in'} <ArrowRight size={16} />
